@@ -38,7 +38,9 @@ const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
+  const [selected, setSelected] = useState(
+    window.location.pathname === "/" ? "Dashboard" : "Visualization"
+  );
 
   return (
     <Box
@@ -75,7 +77,7 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px">
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                  МУИС
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -100,10 +102,10 @@ const Sidebar = () => {
                   color={colors.grey[100]}
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}>
-                  Ed Roh
+                  Tsenguun
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  VP Fancy Admin
+                  20B1NUM2314
                 </Typography>
               </Box>
             </Box>
@@ -122,6 +124,13 @@ const Sidebar = () => {
               title="Visualization"
               to="/visualization"
               icon={<BubbleChartOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Хуваарь"
+              to="/schedule"
+              icon={<CalendarTodayOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />

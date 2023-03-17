@@ -1,0 +1,15 @@
+.graph svg g {
+  transition: opacity .3s ease;
+}
+
+.graphSection {
+  border: 1px solid red;
+}
+
+.showText {
+  visibility: visible;
+}
+
+.hideText {
+  visibility: hidden;
+}

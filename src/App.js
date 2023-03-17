@@ -4,8 +4,10 @@ import { CssBaseline } from "@mui/material";
 import Topbar from "./scenes/global/Topbar";
 import Dashboard from "./scenes/dashboard";
 import Visualization from "./scenes/visualization";
+import Schedule from "./scenes/schedule";
 import Sidebar from "./scenes/global/Sidebar";
 import { Route, Routes } from "react-router-dom";
+import "./index.css";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -20,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/visualization" element={<Visualization />} />
+              <Route path="/schedule" element={<Schedule />} />
             </Routes>
           </main>
         </div>

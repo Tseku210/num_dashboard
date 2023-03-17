@@ -1,18 +1,37 @@
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import Data from "../../data/paper-journals.json";
 import Navbar from "./components/Navbar";
 import { getTypes } from "../../utils/filters";
 import { Autocomplete, TextField } from "@mui/material";
+import GraphHomeLayout from "./components/GraphHomeLayout";
 
 const Visualization = () => {
-  const [type, setType] = useState("Байгалийн ухаан");
-  const types = getTypes(Data);
+  const [data, setData] = useState([]);
+  const [type, setType] = useState("");
+  const [chosenArticle, setChosenArticle] = useState(null);
+  const [searchArticle, setSearchArticle] = useState(null);
+  const types = getTypes(data);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/graph")
+      .then((res) => res.json())
+      .then((graphData) => {
+        setData(graphData);
+      });
+  }, []);
 
   const handleType = (e) => {
-    console.log(e);
     setType(e.target.value);
+  };
+
+  const handleChosenArticle = (article) => {
+    console.log(article);
+    setChosenArticle(article);
+  };
+
+  const handleSearchArticle = (article) => {
+    setSearchArticle(article);
   };
 
   /* FOR SEARCH AND NAVBAR */
@@ -28,13 +47,37 @@ const Visualization = () => {
           sx={{ width: 300 }}
           freeSolo
           id="searchbar"
-          options={Data.map((option) => option["research_title"])}
+          options={data}
+          getOptionLabel={(option) => option.research_title}
+          renderOption={(props, option) => (
+            <Box {...props} key={option.id}>
+              {option["research_title"]}
+            </Box>
+          )}
+          onChange={(_, value) => {
+            if (!value) return;
+            handleSearchArticle(value);
+            setType(value ? value["research_type"] : "");
+          }}
           renderInput={(params) => (
             <TextField color="secondary" {...params} label="Гарчигаар хайх" />
           )}
         />
       </Box>
-      <Box>hello</Box>
+      {data.length > 0 ? (
+        <GraphHomeLayout
+          type={type}
+          data={data}
+          chosenArticle={chosenArticle}
+          handleChosenArticle={handleChosenArticle}
+          searchArticle={searchArticle}
+          handleSearchArticle={handleSearchArticle}
+        />
+      ) : (
+        <Box>
+          <h1>Loading...</h1>
+        </Box>
+      )}
     </Box>
   );
 };
