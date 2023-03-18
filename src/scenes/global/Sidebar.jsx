@@ -38,9 +38,12 @@ const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState(
-    window.location.pathname === "/" ? "Dashboard" : "Visualization"
-  );
+  const [selected, setSelected] = useState(() => {
+    const path = window.location.pathname;
+    if (path === "/") return "Dashboard";
+    if (path === "/visualization") return "Visualization";
+    if (path === "/schedule") return "Хуваарь";
+  });
 
   return (
     <Box
