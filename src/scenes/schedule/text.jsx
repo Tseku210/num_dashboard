@@ -23,13 +23,6 @@ const daysOfWeek = [
   "Ням",
 ];
 
-const timeSlots = [
-  { start: "9:00am", end: "10:00am" },
-  { start: "10:00am", end: "11:00am" },
-  { start: "11:00am", end: "12:00pm" },
-  // and so on...
-];
-
 const timeOptions = [
   "07:40 - 08:25",
   "08:25 - 09:10",
@@ -52,9 +45,9 @@ const timeOptions = [
 ];
 
 const classInformation = {
-  "07:40 - 08:25": { start: "07:40am", end: "08:25am", subject: "English" },
-  "10:05 - 10:50": { start: "10:05am", end: "10:50am", subject: "Math" },
-  "11:00 - 11:45": { start: "11:00am", end: "11:45am", subject: "Science" },
+  "07:40 - 08:25": { day: "Даваа", span: 2, subject: "English" },
+  "10:05 - 10:50": { day: "Мягмар", span: 3, subject: "Math" },
+  "11:00 - 11:45": { day: "Пүрэв", span: 2, subject: "Science" },
   // and so on...
 };
 
@@ -72,12 +65,6 @@ function ClassSchedule() {
   // get theme
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
-  // initialize the row span state
-  const rowSpanState = {
-    subject: null,
-    end: null,
-  };
 
   return (
     <Box padding="30px">
@@ -102,46 +89,25 @@ function ClassSchedule() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {timeOptions.map((timeSlot, timeIndex) => {
-              // get the class information for this time slot
-              const classInfo = classInformation[timeSlot];
-              const isStartOfRowSpan =
-                classInfo && classInfo.start === timeSlot;
-
-              // if this time slot is the start of a row span, update the row span state
-              if (isStartOfRowSpan) {
-                rowSpanState.subject = classInfo.subject;
-                rowSpanState.end = classInfo.end;
-              }
-
-              // determine if this cell should have a row span
-              const shouldRowSpan =
-                rowSpanState.subject !== null && rowSpanState.end === timeSlot;
-
-              // if this time slot is the end of a row span, clear the row span state
-              if (shouldRowSpan) {
-                rowSpanState.subject = null;
-                rowSpanState.end = null;
-              }
-
-              // render the table cell
-              return (
-                <TableRow key={timeSlot}>
-                  <StyledTableCell sx={{ color: "gray", width: "fit-content" }}>
-                    {timeSlot}
-                  </StyledTableCell>
-                  {daysOfWeek.map((day) => (
+            {timeOptions.map((timeSlot) => (
+              <TableRow key={timeSlot}>
+                <StyledTableCell sx={{ color: "gray", width: "fit-content" }}>
+                  {timeSlot}
+                </StyledTableCell>
+                {daysOfWeek.map((day, i) => {
+                  const classInfo = classInformation[timeSlot];
+                  const isStartOfRowSpan =
+                    classInfo && classInfo.day === day ? true : false;
+                  return (
                     <StyledTableCell
                       key={`${day}-${timeSlot}`}
-                      rowSpan={shouldRowSpan ? rowSpanState.end : undefined}>
-                      {shouldRowSpan && day === daysOfWeek[0]
-                        ? rowSpanState.subject
-                        : null}
+                      rowSpan={isStartOfRowSpan ? classInfo.span : undefined}>
+                      {isStartOfRowSpan ? classInfo.subject : null}
                     </StyledTableCell>
-                  ))}
-                </TableRow>
-              );
-            })}
+                  );
+                })}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
