@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navbar from "./components/Navbar";
 import { getTypes } from "../../utils/filters";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import GraphHomeLayout from "./components/GraphHomeLayout";
 
 const Visualization = () => {
@@ -14,7 +14,7 @@ const Visualization = () => {
   const types = getTypes(data);
 
   useEffect(() => {
-    fetch("http://localhost:3001/graph")
+    fetch(process.env.REACT_APP_BACKEND_URL + "/graph")
       .then((res) => res.json())
       .then((graphData) => {
         setData(graphData);
@@ -74,8 +74,12 @@ const Visualization = () => {
           handleSearchArticle={handleSearchArticle}
         />
       ) : (
-        <Box>
-          <h1>Loading...</h1>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignContent="center"
+          height="100%">
+          <CircularProgress color="secondary" />
         </Box>
       )}
     </Box>

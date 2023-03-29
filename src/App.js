@@ -7,24 +7,42 @@ import Visualization from "./scenes/visualization";
 import Schedule from "./scenes/schedule";
 import ClassSchedule from "./scenes/schedule/text";
 import Sidebar from "./scenes/global/Sidebar";
+import Confirmation from "./scenes/confirmation";
 import { Route, Routes } from "react-router-dom";
 import "./index.css";
+import Login from "./scenes/login";
+import { useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import SignUp from "./scenes/register";
+import PrivateRoutes from "./components/PrivateRoutes";
+import { useAuth } from "./hooks/useAuth";
+import ScheduleTable from "./scenes/schedule/test2";
+import ScheduleViewer from "./scenes/schedule/scheduleViewer";
 
 function App() {
   const [theme, colorMode] = useMode();
+
+  const { user } = useAuth();
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="app">
-          <Sidebar />
+          {user ? <Sidebar /> : null}
           <main className="content">
-            <Topbar />
+            {user ? <Topbar /> : null}
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/visualization" element={<Visualization />} />
-              {/* <Route path="/schedule" element={<Schedule />} /> */}
-              <Route path="/schedule" element={<ClassSchedule />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<SignUp />} />
+              <Route path="/confirmation/:userId" element={<Confirmation />} />
+              <Route path="/" element={<PrivateRoutes />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/visualization" element={<Visualization />} />
+                <Route path="/schedule" element={<ScheduleViewer />} />
+              </Route>
             </Routes>
           </main>
         </div>
