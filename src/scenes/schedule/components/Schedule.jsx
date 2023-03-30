@@ -7,7 +7,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { tokens } from "../theme";
+import { tokens } from "../../../theme";
 import { useTheme } from "@mui/material/styles";
 
 const daysOfWeek = [

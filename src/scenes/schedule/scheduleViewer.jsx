@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Header from "../../components/Header";
-import Schedule from "../../components/Schedule";
+import Schedule from "./components/Schedule";
 import { useState, forwardRef, useEffect } from "react";
 import { AppBar, Dialog } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -63,7 +63,7 @@ const ScheduleViewer = () => {
   };
 
   return (
-    <Box m="20px">
+    <Box m="0 auto" maxWidth="1200px">
       <Header title="Смарт Хуваарь" subtitle="Хүссэн хувиараа олцгооё" />
       <Button
         variant="contained"
@@ -108,7 +108,7 @@ const ScheduleViewer = () => {
               id="searchbar"
               options={subjects}
               // getOptionLabel={(option) => option.research_title}
-              renderOption={(props) => <Box {...props}>{option}</Box>}
+              // renderOption={(props) => <Box {...props}>{option}</Box>}
               // onChange={(_, value) => {
               //   if (!value) return;
               //   handleSearchArticle(value);

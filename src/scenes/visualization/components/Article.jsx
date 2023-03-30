@@ -61,7 +61,12 @@ const Article = ({ article }) => {
           </Box>
           <Box>
             <Typography color="grey">Бусад мэдээлэл</Typography>
-            <TableContainer component={Paper}>
+            <TableContainer
+              component={Paper}
+              sx={{
+                backgroundColor:
+                  theme.palette.mode === "dark" && colors.primary[500],
+              }}>
               <Table aria-label="extra detail table" size="small">
                 <TableBody>
                   <TableRow>
