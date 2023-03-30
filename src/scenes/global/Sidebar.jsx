@@ -41,6 +41,9 @@ const Sidebar = () => {
   return (
     <Box
       sx={{
+        "& .pro-sidebar": {
+          maxWidth: "250px",
+        },
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,
         },
@@ -72,7 +75,10 @@ const Sidebar = () => {
                 justifyContent="space-between"
                 alignItems="center"
                 ml="15px">
-                <Typography variant="h3" color={colors.grey[100]}>
+                <Typography
+                  variant="h3"
+                  color={colors.grey[100]}
+                  fontWeight="900">
                   МУИС
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
