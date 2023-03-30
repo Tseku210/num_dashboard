@@ -20,6 +20,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 import { fetchProfessors, fetchSubjects } from "../../utils/fetch";
+import { timeOptions } from "../../utils/constants";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -135,41 +136,57 @@ const ScheduleFormDialog = ({ open, onClose }) => {
             label="Лекц"
           />
           {lecture && (
-            <Grid container spacing={2} p="20px">
-              <Grid item xs={6}>
-                <TextField
-                  id="time"
-                  label="Эхлэх цаг"
-                  type="time"
-                  defaultValue="07:30"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="time"
-                  label="Дуусах цаг"
-                  type="time"
-                  defaultValue="08:30"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
-                  }}
-                />
-              </Grid>
-            </Grid>
+            <Box pt="20px" pb="20px">
+              <FormControl sx={{ width: "300px" }} variant="standard">
+                <InputLabel>Эхлэх цаг</InputLabel>
+                <Select defaultValue="07:40">
+                  {timeOptions.map((time, index) => (
+                    <MenuItem key={index} value={time}>
+                      {time}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: "300px" }} variant="standard">
+                <InputLabel>Дуусах цаг</InputLabel>
+                <Select defaultValue="07:40">
+                  {timeOptions.map((time, index) => (
+                    <MenuItem key={index} value={time}>
+                      {time}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
           )}
           <FormControlLabel
             control={<Checkbox checked={seminar} onChange={toggleSeminar} />}
             label="Семинар"
           />
+          {seminar && (
+            <Box pt="20px" pb="20px">
+              <FormControl sx={{ width: "300px" }} variant="standard">
+                <InputLabel>Эхлэх цаг</InputLabel>
+                <Select defaultValue="07:40">
+                  {timeOptions.map((time, index) => (
+                    <MenuItem key={index} value={time}>
+                      {time}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: "300px" }} variant="standard">
+                <InputLabel>Дуусах цаг</InputLabel>
+                <Select defaultValue="07:40">
+                  {timeOptions.map((time, index) => (
+                    <MenuItem key={index} value={time}>
+                      {time}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          )}
           <FormControlLabel
             control={
               <Checkbox checked={laboratory} onChange={toggleLaboratory} />
@@ -177,6 +194,30 @@ const ScheduleFormDialog = ({ open, onClose }) => {
             label="Лаборатори"
           />
         </FormGroup>
+        {laboratory && (
+          <Box pt="20px" pb="20px">
+            <FormControl sx={{ width: "300px" }} variant="standard">
+              <InputLabel>Эхлэх цаг</InputLabel>
+              <Select defaultValue="07:40">
+                {timeOptions.map((time, index) => (
+                  <MenuItem key={index} value={time}>
+                    {time}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl sx={{ width: "300px" }} variant="standard">
+              <InputLabel>Дуусах цаг</InputLabel>
+              <Select defaultValue="07:40">
+                {timeOptions.map((time, index) => (
+                  <MenuItem key={index} value={time}>
+                    {time}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        )}
       </Box>
     </Dialog>
   );
