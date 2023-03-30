@@ -18,3 +18,16 @@ export const timeOptions = [
   "21:00",
   "21:45",
 ];
+
+export const colorOptions = [
+  { label: "Blue", value: "#2196F3" },
+  { label: "Green", value: "#4CAF50" },
+  { label: "Orange", value: "#FF9800" },
+  { label: "Red", value: "#F44336" },
+  { label: "Purple", value: "#9C27B0" },
+  { label: "Cyan", value: "#00BCD4" },
+  { label: "Pink", value: "#E91E63" },
+  { label: "Yellow", value: "#FFEB3B" },
+  { label: "Teal", value: "#009688" },
+  { label: "Lime", value: "#CDDC39" },
+];
