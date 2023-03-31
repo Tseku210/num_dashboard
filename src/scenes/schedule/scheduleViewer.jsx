@@ -20,7 +20,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 import { fetchProfessors, fetchSubjects } from "../../utils/fetch";
-import { timeOptions, colorOptions } from "../../utils/constants";
+import { timeOptions, colorOptions, daysOfWeek } from "../../utils/constants";
 import { FixedSizeList as List } from "react-window";
 import * as React from "react";
 
@@ -73,6 +73,12 @@ const ScheduleFormDialog = ({ open, onClose }) => {
   const [lecture, setLecture] = useState(false);
   const [seminar, setSeminar] = useState(false);
   const [laboratory, setLaboratory] = useState(false);
+  const [lectureDay, setLectureDay] = useState(daysOfWeek[0]);
+  const [lectureTime, setLectureTime] = useState("07:40");
+  const [seminarDay, setSeminarDay] = useState(daysOfWeek[0]);
+  const [seminarTime, setSeminarTime] = useState("07:40");
+  const [laboratoryDay, setLaboratoryDay] = useState(daysOfWeek[0]);
+  const [laboratoryTime, setLaboratoryTime] = useState("07:40");
   const [selectedColor, setSelectedColor] = useState(colorOptions[0].value);
 
   useEffect(() => {
@@ -82,6 +88,30 @@ const ScheduleFormDialog = ({ open, onClose }) => {
     };
     fetchSubjectValues();
   }, []);
+
+  const handleLectureDayChange = (event) => {
+    setLectureDay(event.target.value);
+  };
+
+  const handleLectureTimeChange = (event) => {
+    setLectureTime(event.target.value);
+  };
+
+  const handleSeminarDayChange = (event) => {
+    setSeminarDay(event.target.value);
+  };
+
+  const handleSeminarTimeChange = (event) => {
+    setSeminarTime(event.target.value);
+  };
+
+  const handleLaboratoryDayChange = (event) => {
+    setLaboratoryDay(event.target.value);
+  };
+
+  const handleLaboratoryTimeChange = (event) => {
+    setLaboratoryTime(event.target.value);
+  };
 
   const handleColorChange = (event) => {
     setSelectedColor(event.target.value);
@@ -159,7 +189,7 @@ const ScheduleFormDialog = ({ open, onClose }) => {
               renderInput={(params) => (
                 <TextField {...params} label="Хичээл" variant="standard" />
               )}
-              ListboxComponent={ListboxComponent} // Add this line
+              ListboxComponent={ListboxComponent}
             />
             <FormControl sx={{ width: "300px" }} variant="standard">
               <InputLabel>Багш сонгох</InputLabel>
@@ -185,8 +215,22 @@ const ScheduleFormDialog = ({ open, onClose }) => {
             {lecture && (
               <Box pt="20px" pb="20px">
                 <FormControl sx={{ width: "300px" }} variant="standard">
+                  <InputLabel>Орох өдөр</InputLabel>
+                  <Select
+                    defaultValue={daysOfWeek[0]}
+                    onChange={handleLectureDayChange}>
+                    {daysOfWeek.map((day, index) => (
+                      <MenuItem key={index} value={day}>
+                        {day}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ width: "300px" }} variant="standard">
                   <InputLabel>Эхлэх цаг</InputLabel>
-                  <Select defaultValue="07:40">
+                  <Select
+                    defaultValue="07:40"
+                    onChange={handleLectureTimeChange}>
                     {timeOptions.map((time, index) => (
                       <MenuItem key={index} value={time}>
                         {time}
@@ -203,8 +247,22 @@ const ScheduleFormDialog = ({ open, onClose }) => {
             {seminar && (
               <Box pt="20px" pb="20px">
                 <FormControl sx={{ width: "300px" }} variant="standard">
+                  <InputLabel>Орох өдөр</InputLabel>
+                  <Select
+                    defaultValue={daysOfWeek[0]}
+                    onChange={handleSeminarDayChange}>
+                    {daysOfWeek.map((day, index) => (
+                      <MenuItem key={index} value={day}>
+                        {day}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ width: "300px" }} variant="standard">
                   <InputLabel>Эхлэх цаг</InputLabel>
-                  <Select defaultValue="07:40">
+                  <Select
+                    defaultValue="07:40"
+                    onChange={handleSeminarTimeChange}>
                     {timeOptions.map((time, index) => (
                       <MenuItem key={index} value={time}>
                         {time}
@@ -222,6 +280,16 @@ const ScheduleFormDialog = ({ open, onClose }) => {
             />
             {laboratory && (
               <Box pt="20px" pb="20px">
+                <FormControl sx={{ width: "300px" }} variant="standard">
+                  <InputLabel>Орох өдөр</InputLabel>
+                  <Select defaultValue={daysOfWeek[0]}>
+                    {daysOfWeek.map((day, index) => (
+                      <MenuItem key={index} value={day}>
+                        {day}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
                 <FormControl sx={{ width: "300px" }} variant="standard">
                   <InputLabel>Эхлэх цаг</InputLabel>
                   <Select defaultValue="07:40">
@@ -297,6 +365,9 @@ const ScheduleViewer = () => {
     },
     Мягмар: {
       "09:20 - 10:05": ["Physics 101 - Laboratory", 3],
+    },
+    Лхагва: {
+      "11:45 - 12:30": ["Algorithm - Lecture", 2],
     },
   };
 

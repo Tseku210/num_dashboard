@@ -19,6 +19,16 @@ export const timeOptions = [
   "21:45",
 ];
 
+export const daysOfWeek = [
+  "Даваа",
+  "Мягмар",
+  "Лхагва",
+  "Пүрэв",
+  "Баасан",
+  "Бямба",
+  "Ням",
+];
+
 export const colorOptions = [
   { label: "Blue", value: "#2196F3" },
   { label: "Green", value: "#4CAF50" },
