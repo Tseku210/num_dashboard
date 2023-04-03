@@ -1,14 +1,11 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Header from "../../components/Header";
-import Schedule from "./components/Schedule";
-import { useState, forwardRef, useEffect } from "react";
-import { AppBar, Dialog } from "@mui/material";
+import React, { useState, useEffect, forwardRef } from "react";
+import Dialog from "@mui/material/Dialog";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
-import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -17,50 +14,23 @@ import MenuItem from "@mui/material/MenuItem";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Grid from "@mui/material/Grid";
-import Autocomplete from "@mui/material/Autocomplete";
-import { fetchProfessors, fetchSubjects } from "../../utils/fetch";
-import { timeOptions, colorOptions, daysOfWeek } from "../../utils/constants";
-import { FixedSizeList as List } from "react-window";
-import * as React from "react";
-import NewFormDialog from "./components/ScheduleFormDialog";
-
-// might fix later (there's a bug with height)
-const ListboxComponent = React.forwardRef(function ListboxComponent(
-  props,
-  ref
-) {
-  const { children, ...other } = props;
-  const itemData = React.Children.toArray(children);
-  const itemCount = itemData.length;
-
-  return (
-    <Box ref={ref} {...other}>
-      <List
-        height={150}
-        width="100%"
-        itemSize={46}
-        itemCount={itemCount}
-        itemData={itemData}
-        {...other}>
-        {({ index, style }) => <Box style={style}>{itemData[index]}</Box>}
-      </List>
-    </Box>
-  );
-});
-
-const ScheduleItem = ({ bgColor = "gray", type, subjectName }) => {
-  return (
-    <Box
-      height="100px"
-      width="200px"
-      p="10px"
-      sx={{ backgroundColor: bgColor, borderRadius: "5%" }}>
-      <Box>{type}</Box>
-      <Box>{subjectName}</Box>
-    </Box>
-  );
-};
+import Slide from "@mui/material/Slide";
+import { Autocomplete } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import ListboxComponent from "./ListboxComponent";
+import ScheduleItem from "./ScheduleItem";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContentText from "@mui/material/DialogContentText";
+import {
+  daysOfWeek,
+  timeOptions,
+  colorOptions,
+  typeOfSubject,
+} from "../../../utils/constants";
+import { fetchSubjects, fetchProfessors } from "../../../utils/fetch";
+import { uniqueId } from "lodash";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -382,45 +352,266 @@ const ScheduleFormDialog = ({ open, onClose }) => {
   );
 };
 
-const ScheduleViewer = () => {
-  const exampleSchedule = {
-    Даваа: {
-      "07:40 - 08:25": ["Math 101 - Lecture", 2],
-      "09:20 - 10:05": ["English 101 - Lecture", 2],
-    },
-    Мягмар: {
-      "09:20 - 10:05": ["Physics 101 - Laboratory", 3],
-    },
-    Лхагва: {
-      "11:45 - 12:30": ["Algorithm - Lecture", 2],
-    },
+// export default ScheduleFormDialog;
+
+const defaultVariation = {
+  type: "",
+  dayOfWeek: "",
+  professor: "",
+  startTime: "",
+};
+
+const NewFormDialog = ({ open, onClose }) => {
+  const [formState, setFormState] = useState({
+    subjects: [],
+  });
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [addProfessorOpen, setaddProfessorOpen] = useState(false);
+  const [inputProfessorName, setInputProfessorName] = useState("");
+  const [inputProfessorNameError, setInputProfessorNameError] = useState(false);
+
+  useEffect(() => {
+    const fetchSubjectValues = async () => {
+      const subjects = await fetchSubjects();
+      setSubjects(subjects);
+    };
+    fetchSubjectValues();
+  }, []);
+
+  const fetchProfessorValues = async (subjectId, subjectUniqueId) => {
+    const professors = await fetchProfessors(subjectId);
+    setFormState((prevState) => {
+      const subjects = prevState.subjects.map((subject) => {
+        if (subject.id === subjectUniqueId) {
+          return { ...subject, professors };
+        }
+        return subject;
+      });
+      return { ...prevState, subjects };
+    });
   };
 
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const handleClickOpen = async () => {
-    setOpenDialog(true);
+  const addSubject = (subject) => {
+    if (!subject) return;
+    const uniqId = uniqueId();
+    setFormState((prevState) => {
+      return {
+        ...prevState,
+        subjects: [
+          ...prevState.subjects,
+          {
+            id: uniqId,
+            name: subject.name,
+            variations: [{}], // Initialize with an empty variation
+            professors: [], // Initialize with an empty professors array
+          },
+        ],
+      };
+    });
+    setSelectedSubject(null);
+    fetchProfessorValues(subject.id, uniqId);
   };
 
-  const handleClose = () => {
-    setOpenDialog(false);
+  const addVariation = (subjectId) => {
+    // ... logic to add a new variation to the subject with the given ID
+  };
+
+  const updateVariation = (subjectId, variationIndex, updatedVariation) => {
+    setFormState((prevState) => {
+      const subjects = prevState.subjects.map((subject) => {
+        if (subject.id === subjectId) {
+          return {
+            ...subject,
+            variations: subject.variations.map((variation, index) =>
+              index === variationIndex ? updatedVariation : variation
+            ),
+          };
+        }
+        return subject;
+      });
+      return { ...prevState, subjects };
+    });
+  };
+
+  const removeVariation = (subjectId, variationIndex) => {
+    // ... logic to remove the variation at the given index for the subject with the given ID
+  };
+
+  const removeSubject = (subjectId) => {
+    // ... logic to remove the subject with the given ID
+  };
+
+  const handleOpenProfessorDialog = () => {
+    setaddProfessorOpen(true);
+  };
+
+  const handleCloseProfessorDialog = () => {
+    setaddProfessorOpen(false);
+  };
+
+  const handleAddProfessor = (subjectId) => {
+    if (inputProfessorName.trim() === "") {
+      setInputProfessorNameError(true);
+      return;
+    }
+
+    setFormState((prevState) => {
+      const subjects = prevState.subjects.map((subject) => {
+        if (subject.id === subjectId) {
+          return {
+            ...subject,
+            professors: [...subject.professors, inputProfessorName],
+          };
+        }
+        return subject;
+      });
+      return { ...prevState, subjects };
+    });
+
+    setInputProfessorNameError(false);
+    setInputProfessorName("");
+    handleCloseProfessorDialog();
   };
 
   return (
-    <Box m="0 auto" maxWidth="1200px" pr="20px" pl="20px">
-      <Header title="Смарт Хуваарь" subtitle="Хүссэн хувиараа олцгооё" />
-      <Button
-        variant="contained"
-        sx={{ width: "100%", marginBottom: "10px" }}
-        color="secondary"
-        onClick={handleClickOpen}>
-        + хуваарь нэмэх
-      </Button>
-      {/* <ScheduleFormDialog open={openDialog} onClose={handleClose} /> */}
-      <NewFormDialog open={openDialog} onClose={handleClose} />
-      <Schedule schedule={exampleSchedule} />
-    </Box>
+    <Dialog
+      fullScreen
+      open={open}
+      onClose={onClose}
+      TransitionComponent={Transition}>
+      <AppBar sx={{ position: "relative" }}>
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={onClose}
+            aria-label="close">
+            <CloseIcon />
+          </IconButton>
+          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            Хуваарь нэмэх
+          </Typography>
+          <Button autoFocus color="inherit" onClick={onClose}>
+            хадгалах
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Box display="flex">
+        <Box p="25px" display="flex" flexDirection="column" gap="25px">
+          {/* new version */}
+          <Box display="flex" gap="10px">
+            <Autocomplete
+              sx={{ width: "300px" }}
+              options={subjects}
+              getOptionLabel={(option) => option.name}
+              id="subject"
+              clearOnEscape
+              value={selectedSubject || null}
+              onChange={(_, value) => setSelectedSubject(value)}
+              isOptionEqualToValue={(option, value) =>
+                option.id === value.id && option.name === value.name
+              }
+              renderInput={(params) => (
+                <TextField {...params} label="Хичээл" variant="standard" />
+              )}
+              ListboxComponent={ListboxComponent}
+            />
+            <Button
+              variant="contained"
+              onClick={() => addSubject(selectedSubject)}>
+              + Хичээл нэмэх
+            </Button>
+          </Box>
+
+          {formState.subjects.map((subject) => (
+            <Box key={subject.id}>
+              <Typography variant="h6">{subject.name}</Typography>
+              {subject.variations.map((variation, index) => (
+                <Box key={index} display="flex" gap="5px">
+                  <FormControl sx={{ width: "300px" }} variant="standard">
+                    <InputLabel>Хичээлийн төрөл</InputLabel>
+                    <Select
+                      label="Хичээлийн төрөл"
+                      value={variation.type || ""}
+                      onChange={(e) =>
+                        updateVariation(subject.id, index, {
+                          ...variation,
+                          type: e.target.value,
+                        })
+                      }>
+                      <MenuItem value=""></MenuItem>
+                      {typeOfSubject.map((type, i) => (
+                        <MenuItem value={type} key={i}>
+                          {type}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ width: "300px" }} variant="standard">
+                    <InputLabel>Багш</InputLabel>
+                    <Select
+                      label="Багш"
+                      value={variation.professor || ""}
+                      onChange={(e) =>
+                        updateVariation(subject.id, index, {
+                          ...variation,
+                          professor: e.target.value,
+                        })
+                      }>
+                      <MenuItem value=""></MenuItem>
+                      {subject.professors.map((professor, i) => (
+                        <MenuItem value={professor} key={i}>
+                          {professor}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <Button
+                    variant="outlined"
+                    onClick={handleOpenProfessorDialog}
+                    sx={{ minWidth: "0", minHeight: "100%" }}>
+                    +
+                  </Button>
+                  <Dialog
+                    open={addProfessorOpen}
+                    onClose={handleCloseProfessorDialog}>
+                    <DialogTitle>Багш нэмэх</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        Нэмэх багшийн нэрийг оруулна уу
+                      </DialogContentText>
+                      <TextField
+                        error={inputProfessorNameError}
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Нэр"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        helperText="Нэр заавал оруулна уу"
+                        value={inputProfessorName}
+                        onChange={(e) => setInputProfessorName(e.target.value)}
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseProfessorDialog}>
+                        Буцах
+                      </Button>
+                      <Button onClick={() => handleAddProfessor(subject.id)}>
+                        Нэмэх
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </Box>
+              ))}
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </Dialog>
   );
 };
 
-export default ScheduleViewer;
+export default NewFormDialog;

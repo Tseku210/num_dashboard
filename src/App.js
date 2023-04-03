@@ -4,21 +4,14 @@ import { CssBaseline } from "@mui/material";
 import Topbar from "./scenes/global/Topbar";
 import Dashboard from "./scenes/dashboard";
 import Visualization from "./scenes/visualization";
-import Schedule from "./scenes/schedule";
-import ClassSchedule from "./scenes/schedule/text";
 import Sidebar from "./scenes/global/Sidebar";
 import Confirmation from "./scenes/confirmation";
 import { Route, Routes } from "react-router-dom";
 import "./index.css";
 import Login from "./scenes/login";
-import { useQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
 import SignUp from "./scenes/register";
 import PrivateRoutes from "./components/PrivateRoutes";
 import { useAuth } from "./hooks/useAuth";
-import ScheduleTable from "./scenes/schedule/test2";
 import ScheduleViewer from "./scenes/schedule/scheduleViewer";
 
 function App() {

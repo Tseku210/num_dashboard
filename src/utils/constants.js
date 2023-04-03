@@ -29,6 +29,8 @@ export const daysOfWeek = [
   "Ням",
 ];
 
+export const typeOfSubject = ["Лекц", "Семинар", "Лаборатори"];
+
 export const colorOptions = [
   { label: "Blue", value: "#2196F3" },
   { label: "Green", value: "#4CAF50" },
