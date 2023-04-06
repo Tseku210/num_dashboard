@@ -403,6 +403,7 @@ const NewFormDialog = ({ open, onClose }) => {
           {
             id: uniqId,
             name: subject.name,
+            color: colorOptions[0].value,
             variations: [{}], // Initialize with an empty variation
             professors: [], // Initialize with an empty professors array
           },
@@ -485,6 +486,28 @@ const NewFormDialog = ({ open, onClose }) => {
     handleCloseProfessorDialog();
   };
 
+  const handleColorPick = (subjectId, color) => {
+    if (color === "") return;
+
+    setFormState((prevState) => {
+      const subjects = prevState.subjects.map((subject) => {
+        if (subject.id === subjectId) {
+          return {
+            ...subject,
+            color: color,
+          };
+        }
+        return subject;
+      });
+      return { ...prevState, subjects };
+    });
+  };
+
+  const handleSubmit = () => {
+    console.log(formState);
+    // onClose();
+  };
+
   return (
     <Dialog
       fullScreen
@@ -503,7 +526,7 @@ const NewFormDialog = ({ open, onClose }) => {
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Хуваарь нэмэх
           </Typography>
-          <Button autoFocus color="inherit" onClick={onClose}>
+          <Button autoFocus color="inherit" onClick={handleSubmit}>
             хадгалах
           </Button>
         </Toolbar>
@@ -534,7 +557,6 @@ const NewFormDialog = ({ open, onClose }) => {
               + Хичээл нэмэх
             </Button>
           </Box>
-
           {formState.subjects.map((subject) => (
             <Box
               key={subject.id}
@@ -542,6 +564,28 @@ const NewFormDialog = ({ open, onClose }) => {
               flexDirection="column"
               gap="5px">
               <Typography variant="h6">{subject.name}</Typography>
+              <FormControl
+                sx={{ width: "120px", margin: "10px 0" }}
+                variant="outlined">
+                <InputLabel>Өнгө сонгох</InputLabel>
+                <Select
+                  label="Өнгө сонгох"
+                  value={subject.color}
+                  onChange={(e) => handleColorPick(subject.id, e.target.value)}>
+                  {colorOptions.map((colorOption, index) => (
+                    <MenuItem key={index} value={colorOption.value}>
+                      <Box display="flex" alignItems="center">
+                        <Box
+                          width={16}
+                          height={16}
+                          marginRight={1}
+                          bgcolor={colorOption.value}></Box>
+                        {colorOption.label}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               {subject.variations.map((variation, index) => (
                 <Box key={index} display="flex" gap="5px">
                   <FormControl sx={{ width: "300px" }} variant="standard">
