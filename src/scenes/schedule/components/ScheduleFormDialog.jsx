@@ -414,7 +414,18 @@ const NewFormDialog = ({ open, onClose }) => {
   };
 
   const addVariation = (subjectId) => {
-    // ... logic to add a new variation to the subject with the given ID
+    setFormState((prevState) => {
+      const subjects = prevState.subjects.map((subject) => {
+        if (subject.id === subjectId) {
+          return {
+            ...subject,
+            variations: [...subject.variations, {}],
+          };
+        }
+        return subject;
+      });
+      return { ...prevState, subjects };
+    });
   };
 
   const updateVariation = (subjectId, variationIndex, updatedVariation) => {
@@ -525,7 +536,11 @@ const NewFormDialog = ({ open, onClose }) => {
           </Box>
 
           {formState.subjects.map((subject) => (
-            <Box key={subject.id}>
+            <Box
+              key={subject.id}
+              display="flex"
+              flexDirection="column"
+              gap="5px">
               <Typography variant="h6">{subject.name}</Typography>
               {subject.variations.map((variation, index) => (
                 <Box key={index} display="flex" gap="5px">
@@ -565,14 +580,52 @@ const NewFormDialog = ({ open, onClose }) => {
                           {professor}
                         </MenuItem>
                       ))}
+                      <Button
+                        fullWidth
+                        onClick={handleOpenProfessorDialog}
+                        sx={{ minWidth: "0", minHeight: "100%" }}>
+                        +
+                      </Button>
                     </Select>
                   </FormControl>
-                  <Button
-                    variant="outlined"
-                    onClick={handleOpenProfessorDialog}
-                    sx={{ minWidth: "0", minHeight: "100%" }}>
-                    +
-                  </Button>
+                  <FormControl sx={{ width: "300px" }} variant="standard">
+                    <InputLabel>Орох өдөр</InputLabel>
+                    <Select
+                      label="Орох өдөр"
+                      value={variation.dayOfWeek || ""}
+                      onChange={(e) =>
+                        updateVariation(subject.id, index, {
+                          ...variation,
+                          dayOfWeek: e.target.value,
+                        })
+                      }>
+                      <MenuItem value=""></MenuItem>
+                      {daysOfWeek.map((type, i) => (
+                        <MenuItem value={type} key={i}>
+                          {type}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ width: "300px" }} variant="standard">
+                    <InputLabel>Орох цаг</InputLabel>
+                    <Select
+                      label="Орох цаг"
+                      value={variation.startTime || ""}
+                      onChange={(e) =>
+                        updateVariation(subject.id, index, {
+                          ...variation,
+                          startTime: e.target.value,
+                        })
+                      }>
+                      <MenuItem value=""></MenuItem>
+                      {timeOptions.map((type, i) => (
+                        <MenuItem value={type} key={i}>
+                          {type}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                   <Dialog
                     open={addProfessorOpen}
                     onClose={handleCloseProfessorDialog}>
@@ -606,6 +659,12 @@ const NewFormDialog = ({ open, onClose }) => {
                   </Dialog>
                 </Box>
               ))}
+              <Button
+                fullWidth
+                sx={{ color: "gray", marginTop: "10px" }}
+                onClick={() => addVariation(subject.id)}>
+                + Хувилбар нэмэх
+              </Button>
             </Box>
           ))}
         </Box>
