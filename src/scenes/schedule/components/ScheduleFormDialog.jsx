@@ -36,6 +36,8 @@ import {
   fetchGeneratedSchedule,
 } from "../../../utils/fetch";
 import { uniqueId } from "lodash";
+import { useTheme } from "@mui/material";
+import { tokens } from "../../../theme";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -50,6 +52,9 @@ const defaultVariation = {
 };
 
 const NewFormDialog = ({ open, onClose, handleSchedule }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   const [formState, setFormState] = useState({
     subjects: [],
   });
@@ -232,13 +237,13 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
   };
 
   const handleClose = () => {
-    setFormState({
-      subjects: [],
-    });
-    setSelectedSubject(null);
-    setaddProfessorOpen(false);
-    setInputProfessorName("");
-    setInputProfessorNameError(false);
+    // setFormState({
+    //   subjects: [],
+    // });
+    // setSelectedSubject(null);
+    // setaddProfessorOpen(false);
+    // setInputProfessorName("");
+    // setInputProfessorNameError(false);
     onClose();
   };
 
@@ -248,7 +253,14 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
       open={open}
       onClose={handleClose}
       TransitionComponent={Transition}>
-      <AppBar sx={{ position: "relative" }}>
+      <AppBar
+        sx={{
+          position: "relative",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? colors.greenAccent[600]
+              : colors.greenAccent[400],
+        }}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -287,6 +299,7 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
             />
             <Button
               variant="contained"
+              color="secondary"
               onClick={() => addSubject(selectedSubject)}>
               + Хичээл нэмэх
             </Button>
