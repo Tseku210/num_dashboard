@@ -120,7 +120,6 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            {/* <Typography></Typography> */}
             <Item
               title="Visualization"
               to="/visualization"

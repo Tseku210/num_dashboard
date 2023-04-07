@@ -9,36 +9,7 @@ import {
 } from "@mui/material";
 import { tokens } from "../../../theme";
 import { useTheme } from "@mui/material/styles";
-
-const daysOfWeek = [
-  "Даваа",
-  "Мягмар",
-  "Лхагва",
-  "Пүрэв",
-  "Баасан",
-  "Бямба",
-  "Ням",
-];
-const timeOptions = [
-  "07:40 - 08:25",
-  "08:25 - 09:10",
-  "09:20 - 10:05",
-  "10:05 - 10:50",
-  "11:00 - 11:45",
-  "11:45 - 12:30",
-  "12:40 - 13:25",
-  "13:25 - 14:10",
-  "14:20 - 15:05",
-  "15:05 - 15:50",
-  "16:00 - 16:45",
-  "16:45 - 17:30",
-  "17:40 - 18:25",
-  "18:25 - 19:10",
-  "19:20 - 20:05",
-  "20:05 - 20:50",
-  "21:00 - 21:45",
-  "21:45 - 22:30",
-];
+import { timeOptions, daysOfWeek } from "../../../utils/constants";
 
 const cellWidth = 70;
 
@@ -86,7 +57,7 @@ const Schedule = ({ schedule }) => {
                     return null;
                   }
 
-                  const arr = schedule?.[day]?.[time];
+                  const arr = schedule[0].variations;
                   if (arr) {
                     const subject = arr[0];
                     const classDuration = arr[1];
