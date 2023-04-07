@@ -2,12 +2,13 @@ import { useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import BubbleChartOutlinedIcon from "@mui/icons-material/BubbleChartOutlined";
+import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import { useAuth } from "../../hooks/useAuth";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -31,11 +32,9 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const { user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
   const [selected, setSelected] = useState(() => {
-    const path = window.location.pathname;
-    if (path === "/") return "Dashboard";
-    if (path === "/visualization") return "Visualization";
-    if (path === "/schedule") return "Хуваарь";
+    return location.pathname;
   });
 
   return (
@@ -133,6 +132,13 @@ const Sidebar = () => {
               title="Хуваарь"
               to="/schedule"
               icon={<CalendarTodayOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Форум"
+              to="/forum"
+              icon={<ForumOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />

@@ -13,6 +13,7 @@ import SignUp from "./scenes/register";
 import PrivateRoutes from "./components/PrivateRoutes";
 import { useAuth } from "./hooks/useAuth";
 import ScheduleViewer from "./scenes/schedule/scheduleViewer";
+import Forum from "./scenes/Forum";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/visualization" element={<Visualization />} />
                 <Route path="/schedule" element={<ScheduleViewer />} />
+                <Route path="/forum" element={<Forum />} />
               </Route>
             </Routes>
           </main>
