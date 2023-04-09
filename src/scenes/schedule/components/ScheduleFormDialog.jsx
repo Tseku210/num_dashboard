@@ -24,6 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
+import { red, green, orange } from "@mui/material/colors";
 import {
   daysOfWeek,
   timeOptions,
@@ -45,7 +46,32 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const DifficultyItem = ({ difficulty }) => {
-  return <Box>{difficulty}</Box>;
+  const getColor = () => {
+    if (difficulty === "Easy") return green[500];
+    if (difficulty === "Medium") return orange[500];
+    if (difficulty === "High") return red[500];
+  };
+  const getName = () => {
+    if (difficulty === "Easy") return "Амархан";
+    if (difficulty === "Medium") return "Дунд";
+    if (difficulty === "High") return "Хүнд";
+  };
+
+  return (
+    <Box
+      mr="5px"
+      pt="2px"
+      pb="2px"
+      pr="5px"
+      pl="5px"
+      sx={{
+        border: `2px solid ${getColor()}`,
+        borderRadius: "5px",
+        color: getColor(),
+      }}>
+      {getName()}
+    </Box>
+  );
 };
 
 const defaultVariation = {
@@ -96,7 +122,6 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
   const addSubject = async (subject) => {
     if (!subject) return;
     const diff = await fetchDifficulty(subject.name);
-    console.log(diff);
     const uniqId = uniqueId();
     setFormState((prevState) => {
       return {
@@ -107,9 +132,9 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
             id: uniqId,
             name: subject.name,
             color: colorOptions[0].value,
-            difficulty: diff.Difficulty_Level,
-            variations: [{}], // Initialize with an empty variation
-            professors: [], // Initialize with an empty professors array
+            difficulty: diff[0].Difficulty_Level,
+            variations: [{}],
+            professors: [],
           },
         ],
       };
