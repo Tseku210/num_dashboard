@@ -34,6 +34,7 @@ import {
   fetchSubjects,
   fetchProfessors,
   fetchGeneratedSchedule,
+  fetchDifficulty,
 } from "../../../utils/fetch";
 import { uniqueId } from "lodash";
 import { useTheme } from "@mui/material";
@@ -42,6 +43,10 @@ import { tokens } from "../../../theme";
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const DifficultyItem = ({ difficulty }) => {
+  return <Box>{difficulty}</Box>;
+};
 
 const defaultVariation = {
   type: "",
@@ -88,8 +93,10 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
     });
   };
 
-  const addSubject = (subject) => {
+  const addSubject = async (subject) => {
     if (!subject) return;
+    const diff = await fetchDifficulty(subject.name);
+    console.log(diff);
     const uniqId = uniqueId();
     setFormState((prevState) => {
       return {
@@ -100,6 +107,7 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
             id: uniqId,
             name: subject.name,
             color: colorOptions[0].value,
+            difficulty: diff.Difficulty_Level,
             variations: [{}], // Initialize with an empty variation
             professors: [], // Initialize with an empty professors array
           },
@@ -311,6 +319,7 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
               flexDirection="column"
               gap="5px">
               <Box display="flex" alignItems="center">
+                <DifficultyItem difficulty={subject.difficulty} />
                 <Typography variant="h6">{subject.name}</Typography>
                 <IconButton
                   type="button"

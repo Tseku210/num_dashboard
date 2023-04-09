@@ -3,18 +3,15 @@ import {
   Box,
   Collapse,
   List,
-  ListItem,
   ListItemButton,
   ListItemText,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import {
   GET_CATEGORIES,
-  GET_COMMENTS,
   GET_TOPICS_BY_CATEGORY,
 } from "../../mutations/queries";
 import { useEffect, useState } from "react";
-import Category from "./components/Category";
 import Chat from "./components/Chat";
 import { useApolloClient } from "@apollo/client";
 

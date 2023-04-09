@@ -19,3 +19,9 @@ export const fetchGeneratedSchedule = async (schedules) => {
     },
   }).then((res) => res.json());
 };
+
+export const fetchDifficulty = async (subjectName) => {
+  return await fetch(
+    process.env.REACT_APP_BACKEND_URL + `/${subjectName}/difficulty`
+  ).then((res) => res.json());
+};
