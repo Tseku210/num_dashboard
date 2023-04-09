@@ -34,7 +34,11 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const [selected, setSelected] = useState(() => {
-    return location.pathname;
+    const path = location.pathname;
+    if (path === "/") return "Dashboard";
+    else if (path === "/visualization") return "Visualization";
+    else if (path === "/schedule") return "Хуваарь";
+    else if (path === "/forum") return "Форум";
   });
 
   return (

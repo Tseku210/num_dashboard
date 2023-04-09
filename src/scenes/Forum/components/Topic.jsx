@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { ADD_COMMENT, GET_COMMENTS } from "../../../mutations/mutations";
+import { ADD_COMMENT } from "../../../mutations/mutations";
+import { GET_COMMENTS } from "../../../mutations/queries";
 import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 

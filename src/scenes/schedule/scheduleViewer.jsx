@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Header from "../../components/Header";
 import Schedule from "./components/Schedule";
-import { useState, forwardRef, useEffect } from "react";
+import { useState } from "react";
 import * as React from "react";
 import NewFormDialog from "./components/ScheduleFormDialog";
 
@@ -45,7 +45,6 @@ const ScheduleViewer = () => {
         onClick={handleClickOpen}>
         + хуваарь нэмэх
       </Button>
-      {/* <ScheduleFormDialog open={openDialog} onClose={handleClose} /> */}
       <NewFormDialog
         open={openDialog}
         onClose={handleClose}

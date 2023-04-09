@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_TOPICS_BY_CATEGORY } from "../../../mutations/mutations";
+import { GET_TOPICS_BY_CATEGORY } from "../../../mutations/queries";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Topic from "./Topic";
