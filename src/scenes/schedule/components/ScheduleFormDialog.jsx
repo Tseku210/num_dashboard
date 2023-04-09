@@ -262,10 +262,8 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
     return `${newHour}:${newMinute}`;
   }
   const handleSubmit = async () => {
-    console.log(formState);
     const schedules = await fetchGeneratedSchedule(formState);
     handleSchedule(schedules);
-    console.log(schedules);
     onClose();
   };
 
