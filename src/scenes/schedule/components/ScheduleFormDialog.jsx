@@ -132,7 +132,7 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
             id: uniqId,
             name: subject.name,
             color: colorOptions[0].value,
-            difficulty: diff[0].Difficulty_Level,
+            difficulty: diff.Difficulty_Level,
             variations: [{}],
             professors: [],
           },
