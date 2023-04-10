@@ -36,7 +36,7 @@ const Visualization = () => {
 
   /* FOR SEARCH AND NAVBAR */
   return (
-    <Box m="0 auto" maxWidth="1200px">
+    <Box m="0 auto" maxWidth="1200px" pr="20px" pl="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header
           title="VISUALIZATION"

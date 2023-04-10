@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import {
   Box,
   Collapse,
+  Divider,
   List,
   ListItemButton,
   ListItemText,
@@ -14,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import Chat from "./components/Chat";
 import { useApolloClient } from "@apollo/client";
+import Header from "../../components/Header";
 
 const Forum = () => {
   const client = useApolloClient();
@@ -55,34 +57,41 @@ const Forum = () => {
   };
 
   return (
-    <Box display="flex" height="91%" sx={{ overflowY: "auto" }}>
-      <List sx={{ overflowY: "auto" }}>
-        {categories?.map((category) => (
-          <Box key={category._id}>
-            <ListItemButton onClick={() => handleCategoryClick(category._id)}>
-              <ListItemText primary={category.name} />
-            </ListItemButton>
-            <Collapse
-              in={openCategory === category._id}
-              timeout="auto"
-              unmountOnExit>
-              <List
-                component="div"
-                sx={{ backgroundColor: grey[200], paddingLeft: "10px" }}
-                disablePadding>
-                {topics.map((topic) => (
-                  <ListItemButton
-                    key={topic._id}
-                    onClick={() => handleTopicClick(topic._id)}>
-                    <ListItemText primary={topic.name} />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </Box>
-        ))}
-      </List>
-      {selectedTopic && <Chat topicId={selectedTopic} />}
+    <Box m="0 auto" maxWidth="1200px" pr="20px" pl="20px">
+      <Header title="Хичээлүүд" subtitle="Жагсаалтаас хичээл сонгоно уу" />
+      <Box display="flex" height="91%" sx={{ overflowY: "auto" }}>
+        <List sx={{ overflowY: "auto" }}>
+          {categories?.map((category) => (
+            <Box key={category._id}>
+              <ListItemButton onClick={() => handleCategoryClick(category._id)}>
+                <ListItemText primary={category.name} />
+              </ListItemButton>
+              <Collapse
+                in={openCategory === category._id}
+                timeout="auto"
+                unmountOnExit>
+                <List
+                  component="div"
+                  sx={{ backgroundColor: grey[200], paddingLeft: "10px" }}
+                  disablePadding>
+                  {topics.map((topic) => (
+                    <>
+                      <ListItemButton
+                        key={topic._id}
+                        onClick={() => handleTopicClick(topic._id)}>
+                        <ListItemText primary={topic.name} />
+                      </ListItemButton>
+                      <Divider />
+                    </>
+                  ))}
+                </List>
+              </Collapse>
+              <Divider />
+            </Box>
+          ))}
+        </List>
+        {selectedTopic && <Chat topicId={selectedTopic} />}
+      </Box>
     </Box>
   );
 };

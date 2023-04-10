@@ -24,7 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
-import { red, green, orange } from "@mui/material/colors";
+import { red, green, orange, grey } from "@mui/material/colors";
 import {
   daysOfWeek,
   timeOptions,
@@ -50,11 +50,13 @@ const DifficultyItem = ({ difficulty }) => {
     if (difficulty === "Easy") return green[500];
     if (difficulty === "Medium") return orange[500];
     if (difficulty === "High") return red[500];
+    return grey[500];
   };
   const getName = () => {
     if (difficulty === "Easy") return "Амархан";
     if (difficulty === "Medium") return "Дунд";
     if (difficulty === "High") return "Хүнд";
+    return "Тодорхойгүй";
   };
 
   return (
