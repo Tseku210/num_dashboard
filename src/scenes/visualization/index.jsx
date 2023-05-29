@@ -11,13 +11,16 @@ const Visualization = () => {
   const [type, setType] = useState("");
   const [chosenArticle, setChosenArticle] = useState(null);
   const [searchArticle, setSearchArticle] = useState(null);
+  const [loading, setLoading] = useState(false);
   const types = getTypes(data);
 
   useEffect(() => {
+    setLoading(true);
     fetch(process.env.REACT_APP_BACKEND_URL + "/graph")
       .then((res) => res.json())
       .then((graphData) => {
         setData(graphData);
+        setLoading(false);
       });
   }, []);
 
@@ -60,7 +63,20 @@ const Visualization = () => {
             setType(value ? value["research_type"] : "");
           }}
           renderInput={(params) => (
-            <TextField color="secondary" {...params} label="Гарчигаар хайх" />
+            <TextField
+              color="secondary"
+              {...params}
+              label="Гарчигаар хайх"
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading && <CircularProgress color="inherit" size={20} />}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
           )}
         />
       </Box>

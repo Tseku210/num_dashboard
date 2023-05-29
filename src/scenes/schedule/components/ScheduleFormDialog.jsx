@@ -18,12 +18,13 @@ import Slide from "@mui/material/Slide";
 import { Autocomplete } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ListboxComponent from "./ListboxComponent";
+import ListboxComponent from "../../../components/ListboxComponent";
 import ScheduleItem from "./ScheduleItem";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
+import { LoadingButton } from "@mui/lab";
 import { red, green, orange, grey } from "@mui/material/colors";
 import {
   daysOfWeek,
@@ -36,10 +37,12 @@ import {
   fetchProfessors,
   fetchGeneratedSchedule,
   fetchDifficulty,
+  fetchRecommend,
 } from "../../../utils/fetch";
 import { uniqueId } from "lodash";
 import { useTheme } from "@mui/material";
 import { tokens } from "../../../theme";
+import { CheckBox } from "@mui/icons-material";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -96,6 +99,8 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
   const [addProfessorOpen, setaddProfessorOpen] = useState(false);
   const [inputProfessorName, setInputProfessorName] = useState("");
   const [inputProfessorNameError, setInputProfessorNameError] = useState(false);
+  const [must, setMust] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchSubjectValues = async () => {
@@ -124,6 +129,8 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
   const addSubject = async (subject) => {
     if (!subject) return;
     const diff = await fetchDifficulty(subject.name);
+    // const recommendation = await fetchRecommend(subject.name);
+    // console.log(recommendation);
     const uniqId = uniqueId();
     setFormState((prevState) => {
       return {
@@ -135,6 +142,7 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
             name: subject.name,
             color: colorOptions[0].value,
             difficulty: diff.Difficulty_Level,
+            must: must,
             variations: [{}],
             professors: [],
           },
@@ -142,6 +150,7 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
       };
     });
     setSelectedSubject(null);
+    setMust(false);
     fetchProfessorValues(subject.id, uniqId);
   };
 
@@ -264,20 +273,20 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
     return `${newHour}:${newMinute}`;
   }
   const handleSubmit = async () => {
+    setLoading(true);
     const schedules = await fetchGeneratedSchedule(formState);
+    console.log(schedules);
     handleSchedule(schedules);
+    setLoading(false);
     onClose();
   };
 
   const handleClose = () => {
-    // setFormState({
-    //   subjects: [],
-    // });
-    // setSelectedSubject(null);
-    // setaddProfessorOpen(false);
-    // setInputProfessorName("");
-    // setInputProfessorNameError(false);
     onClose();
+  };
+
+  const handleCheckbox = () => {
+    setMust(!must);
   };
 
   return (
@@ -305,15 +314,18 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Хуваарь нэмэх
           </Typography>
-          <Button autoFocus color="inherit" onClick={handleSubmit}>
+          <LoadingButton
+            color="inherit"
+            loading={loading}
+            onClick={handleSubmit}>
             хадгалах
-          </Button>
+          </LoadingButton>
         </Toolbar>
       </AppBar>
       <Box display="flex">
         <Box p="25px" display="flex" flexDirection="column" gap="25px">
           {/* new version */}
-          <Box display="flex" gap="10px">
+          <Box display="flex" alignItems="center" gap="10px">
             <Autocomplete
               sx={{ width: "300px" }}
               options={subjects}
@@ -330,6 +342,7 @@ const NewFormDialog = ({ open, onClose, handleSchedule }) => {
               )}
               ListboxComponent={ListboxComponent}
             />
+            <Checkbox checked={must} onClick={handleCheckbox} />
             <Button
               variant="contained"
               color="secondary"

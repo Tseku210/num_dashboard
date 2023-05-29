@@ -27,3 +27,13 @@ export const fetchDifficulty = async (subjectName) => {
     .then((res) => res.json())
     .catch(() => "N/A");
 };
+
+export const fetchRecommend = async (course_id) => {
+  return await fetch(process.env.REACT_APP_BACKEND_URL + `/recommendations`, {
+    method: "POST",
+    body: JSON.stringify({ course_id }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json());
+};
